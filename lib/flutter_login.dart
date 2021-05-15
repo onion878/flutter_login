@@ -240,8 +240,8 @@ class FlutterLogin extends StatefulWidget {
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
-      this.rememberUser = true,
-      this.rememberPassword = true,
+      this.rememberUser = false,
+      this.rememberPassword = false,
       this.footer})
       : super(key: key);
 
