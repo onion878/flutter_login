@@ -240,6 +240,8 @@ class FlutterLogin extends StatefulWidget {
       this.hideForgotPasswordButton = false,
       this.hideSignUpButton = false,
       this.loginAfterSignUp = true,
+      this.rememberUser = true,
+      this.rememberPassword = true,
       this.footer})
       : super(key: key);
 
@@ -306,6 +308,12 @@ class FlutterLogin extends StatefulWidget {
 
   /// Set to true to hide the SignUp button
   final bool hideSignUpButton;
+
+  // 记住账号
+  final bool rememberUser;
+
+  // 记住密码
+  final bool rememberPassword;
 
   /// Set to false to return back to sign in page after successful sign up
   final bool loginAfterSignUp;
@@ -646,6 +654,8 @@ class _FlutterLoginState extends State<FlutterLogin>
                         hideForgotPasswordButton:
                             widget.hideForgotPasswordButton,
                         loginAfterSignUp: widget.loginAfterSignUp,
+                        rememberUser: widget.rememberUser,
+                        rememberPassword: widget.rememberPassword,
                       ),
                     ),
                     Positioned(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'animated_button.dart';
 import 'animated_icon.dart';
@@ -37,6 +38,8 @@ class AuthCard extends StatefulWidget {
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
     this.loginAfterSignUp = true,
+    this.rememberUser = false,
+    this.rememberPassword = false,
   }) : super(key: key);
 
   final EdgeInsets padding;
@@ -48,6 +51,8 @@ class AuthCard extends StatefulWidget {
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
+  final bool rememberUser;
+  final bool rememberPassword;
   final LoginUserType userType;
 
   @override
@@ -311,6 +316,8 @@ class AuthCardState extends State<AuthCard> with TickerProviderStateMixin {
                     hideSignUpButton: widget.hideSignUpButton,
                     hideForgotPasswordButton: widget.hideForgotPasswordButton,
                     loginAfterSignUp: widget.loginAfterSignUp,
+                    rememberUser: widget.rememberUser,
+                    rememberPassword: widget.rememberPassword,
                   ),
                 )
               : _RecoverCard(
@@ -356,6 +363,8 @@ class _LoginCard extends StatefulWidget {
     this.onSubmitCompleted,
     this.hideForgotPasswordButton = false,
     this.hideSignUpButton = false,
+    this.rememberUser = false,
+    this.rememberPassword = false,
     this.loginAfterSignUp = true,
   }) : super(key: key);
 
@@ -368,6 +377,8 @@ class _LoginCard extends StatefulWidget {
   final bool hideForgotPasswordButton;
   final bool hideSignUpButton;
   final bool loginAfterSignUp;
+  final bool rememberUser;
+  final bool rememberPassword;
   final LoginUserType userType;
 
   @override
@@ -404,10 +415,12 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
 
   bool get buttonEnabled => !_isLoading && !_isSubmitting;
 
+  SharedPreferences? prefs;
+
   @override
   void initState() {
     super.initState();
-
+    initData();
     final auth = Provider.of<Auth>(context, listen: false);
     _nameController = TextEditingController(text: auth.email);
     _passController = TextEditingController(text: auth.password);
@@ -452,6 +465,10 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       parent: _loadingController,
       curve: Interval(.4, 1.0, curve: Curves.easeOutBack),
     ));
+  }
+
+  void initData() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   void handleLoadingAnimationStatus(AnimationStatus status) {
@@ -615,6 +632,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     LoginMessages messages,
     Auth auth,
   ) {
+    var v = prefs?.getString('FLUTTER_LOGIN_PASSWORD');
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,
@@ -625,8 +643,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       prefixIcon: Icon(FontAwesomeIcons.solidUserCircle),
       keyboardType: _getKeyboardType(widget.userType),
       textInputAction: TextInputAction.next,
+      value: v,
       onFieldSubmitted: (value) {
         FocusScope.of(context).requestFocus(_passwordFocusNode);
+      },
+      onChanged: (v) {
+        if (widget.rememberUser) {
+          prefs?.setString('FLUTTER_LOGIN_USERNAME', v);
+        }
       },
       validator: widget.userValidator,
       onSaved: (value) => auth.email = value!,
@@ -634,6 +658,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Widget _buildPasswordField(double width, LoginMessages messages, Auth auth) {
+    var v = prefs?.getString('FLUTTER_LOGIN_PASSWORD');
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       loadingController: _loadingController,
@@ -645,12 +670,18 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
       focusNode: _passwordFocusNode,
+      value: v,
       onFieldSubmitted: (value) {
         if (auth.isLogin) {
           _submit();
         } else {
           // SignUp
           FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
+        }
+      },
+      onChanged: (v) {
+        if (widget.rememberPassword) {
+          prefs?.setString('FLUTTER_LOGIN_PASSWORD', v);
         }
       },
       validator: widget.passwordValidator,
