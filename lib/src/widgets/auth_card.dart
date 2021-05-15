@@ -632,7 +632,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
     LoginMessages messages,
     Auth auth,
   ) {
-    var v = prefs?.getString('FLUTTER_LOGIN_PASSWORD');
+    var v = prefs?.getString('FLUTTER_LOGIN_USERNAME');
     return AnimatedTextFormField(
       controller: _nameController,
       width: width,

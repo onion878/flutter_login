@@ -211,6 +211,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    widget.controller?.text = widget.value ?? '';
     Widget textField = TextFormField(
       controller: widget.controller,
       focusNode: widget.focusNode,
@@ -224,7 +225,6 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       enabled: widget.enabled,
       autocorrect: widget.autocorrect,
       autofillHints: widget.autofillHints,
-      initialValue: widget.value,
       onChanged: widget.onChanged,
     );
 
