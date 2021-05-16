@@ -308,12 +308,15 @@ class AnimatedPasswordTextFormField extends StatefulWidget {
 class _AnimatedPasswordTextFormFieldState
     extends State<AnimatedPasswordTextFormField> {
   var _obscureText = true;
+  TextEditingController? _controller;
 
   @override
   void initState() {
+    _controller = TextEditingController();
     super.initState();
     SharedPreferences.getInstance().then((prefs) {
-      widget.controller?.text = prefs.getString('FLUTTER_LOGIN_PASSWORD') ?? '';
+      _controller?.text = prefs.getString('FLUTTER_LOGIN_PASSWORD') ?? '';
+      setState(() {});
     });
   }
 
@@ -361,7 +364,7 @@ class _AnimatedPasswordTextFormFieldState
       obscureText: _obscureText,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
-      controller: widget.controller,
+      controller: _controller,
       focusNode: widget.focusNode,
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
