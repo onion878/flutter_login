@@ -680,12 +680,7 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
         }
       },
       validator: widget.passwordValidator,
-      onSaved: (value) {
-        if (widget.rememberPassword) {
-          prefs?.setString('FLUTTER_LOGIN_PASSWORD', value ?? '');
-        }
-        auth.password = value!;
-      },
+      onSaved: (value) => auth.password = value!,
     );
   }
 
