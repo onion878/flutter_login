@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum TextFieldInertiaDirection {
   left,
@@ -309,8 +310,15 @@ class _AnimatedPasswordTextFormFieldState
   var _obscureText = true;
 
   @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance().then((prefs) {
+      widget.controller?.text = prefs.getString('FLUTTER_LOGIN_PASSWORD') ?? '';
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    widget.controller?.text = widget.value ?? '';
     return AnimatedTextFormField(
       interval: widget.interval,
       loadingController: widget.loadingController,

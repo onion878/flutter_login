@@ -658,7 +658,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
   }
 
   Widget _buildPasswordField(double width, LoginMessages messages, Auth auth) {
-    var v = prefs?.getString('FLUTTER_LOGIN_PASSWORD');
     return AnimatedPasswordTextFormField(
       animatedWidth: width,
       loadingController: _loadingController,
@@ -670,7 +669,6 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       textInputAction:
           auth.isLogin ? TextInputAction.done : TextInputAction.next,
       focusNode: _passwordFocusNode,
-      value: v,
       onFieldSubmitted: (value) {
         if (auth.isLogin) {
           _submit();
