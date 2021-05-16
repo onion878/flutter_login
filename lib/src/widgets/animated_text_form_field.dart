@@ -310,6 +310,7 @@ class _AnimatedPasswordTextFormFieldState
 
   @override
   Widget build(BuildContext context) {
+    widget.controller?.text = widget.value ?? '';
     return AnimatedTextFormField(
       interval: widget.interval,
       loadingController: widget.loadingController,
