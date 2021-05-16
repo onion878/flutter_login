@@ -672,16 +672,14 @@ class _LoginCardState extends State<_LoginCard> with TickerProviderStateMixin {
       focusNode: _passwordFocusNode,
       value: v,
       onFieldSubmitted: (value) {
+        if (widget.rememberPassword) {
+          prefs?.setString('FLUTTER_LOGIN_PASSWORD', value);
+        }
         if (auth.isLogin) {
           _submit();
         } else {
           // SignUp
           FocusScope.of(context).requestFocus(_confirmPasswordFocusNode);
-        }
-      },
-      onChanged: (v) {
-        if (widget.rememberPassword) {
-          prefs?.setString('FLUTTER_LOGIN_PASSWORD', v);
         }
       },
       validator: widget.passwordValidator,
